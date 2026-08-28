@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Arthashastra — The King's Path</title>
+<style>
+:root{--bg:#120b08;--panel:#26150d;--gold:#e9b85b;--cream:#ffe9bd;--muted:#c8aa7c;--red:#9f432d}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0,#56331a 0,#1b100b 42%,#0c0705 100%);color:var(--cream);font-family:Georgia,serif;min-height:100vh}
+.wrap{max-width:980px;margin:auto;padding:18px}.panel{background:linear-gradient(145deg,#382013,#1b100b);border:1px solid #9c6d32;border-radius:24px;padding:28px;box-shadow:0 18px 70px #0009}
+h1{font-size:clamp(38px,8vw,72px);text-align:center;color:var(--gold);margin:12px 0 6px;text-shadow:0 3px 18px #000}.tag{text-align:center;color:var(--muted);font-size:18px}
+.scene{margin:26px auto;max-width:780px;font-size:20px;line-height:1.65}.seal{font-size:70px;text-align:center}
+.quote{border-left:4px solid var(--gold);padding:12px 18px;color:#efd49d;font-style:italic;margin:22px 0}
+button{display:block;width:100%;margin:10px 0;padding:15px 16px;border-radius:13px;border:1px solid #b7833d;background:#60351d;color:#fff0cf;font:inherit;font-size:17px;cursor:pointer}button:hover{background:#7b4726}button.primary{background:linear-gradient(135deg,#b66c29,#70401e);font-weight:bold}
+.top{display:flex;justify-content:space-between;color:var(--muted);font-size:14px}.bar{height:8px;background:#160d08;border-radius:9px;margin:12px 0 22px;overflow:hidden}.fill{height:100%;background:var(--gold);transition:.4s}
+.choice{padding:12px;border:1px solid #6e4928;border-radius:12px;margin:8px 0;background:#21120b}
+.good{border-color:#8f8}.bad{border-color:#c66}.result{text-align:center}.score{font-size:60px;color:var(--gold)}
+.small{color:var(--muted);font-size:13px;text-align:center;margin-top:15px}
+</style></head>
+<body><div class="wrap"><div class="panel" id="app"></div></div>
+<script>
+const levels=[
+{icon:"📜",title:"The Scroll of Statecraft",learn:"The Arthashastra is a Sanskrit treatise traditionally associated with Kautilya, also known as Chanakya or Vishnugupta. It explores governance, economics, diplomacy, law, intelligence and strategy.",quote:"A ruler must understand the kingdom, its resources and the world around it.",q:"Who is traditionally associated with the Arthashastra?",opts:["Ashoka","Kautilya (Chanakya)","Kalidasa","Aryabhata"],ans:1,ex:"Kautilya, also called Chanakya or Vishnugupta, is traditionally associated with the Arthashastra."},
+{icon:"👑",title:"The Rise of Chandragupta",learn:"Traditional accounts connect Chanakya with Chandragupta Maurya's rise. Chandragupta established the Mauryan Empire, creating one of ancient India's major empires.",quote:"A great strategy begins with a clear purpose.",q:"Who founded the Mauryan Empire?",opts:["Chandragupta Maurya","Ashoka","Harsha","Bindusara"],ans:0,ex:"Chandragupta Maurya founded the Mauryan Empire; Ashoka was a later Mauryan ruler."},
+{icon:"🏛️",title:"The Seven Limbs of the State",learn:"The Saptanga theory describes seven elements of a state: the ruler, ministers, territory and people, fortified places, treasury, army and allies.",quote:"A kingdom is not one thing; it is a system whose parts must support one another.",q:"Which is an element of the Saptanga theory?",opts:["Treasury","Royal costume","Festival calendar","Palace music"],ans:0,ex:"The treasury is one of the seven elements of the state."},
+{icon:"🤝",title:"The Circle of States",learn:"The mandala theory considers the strategic relationships among neighboring states. Diplomacy, alliances and changing interests are central to this way of thinking.",quote:"Know the interests of those around you before deciding your next move.",q:"What does the mandala theory mainly concern?",opts:["Interstate relations","Temple design","Poetry","Agriculture"],ans:0,ex:"Mandala theory is a framework for understanding relations among neighboring rulers and states."},
+{icon:"🕵️",title:"The Secret Network",learn:"The Arthashastra gives an important role to intelligence. Spies can help a ruler learn about threats, rival intentions and conditions within the realm.",quote:"Information turns uncertainty into a decision.",q:"What is the strategic purpose of spies?",opts:["Entertainment","Gathering information","Collecting art","Running festivals"],ans:1,ex:"Intelligence gathering helps a ruler make informed decisions and understand threats."},
+{icon:"⚔️",title:"The King's Decision",learn:"A ruler must balance power, wealth, alliances and information. The Arthashastra is broader than a book about war: it is concerned with practical governance and statecraft.",quote:"The strongest move is the one that serves the kingdom's long-term interest.",q:"Which best captures the themes learned in this game?",opts:["Only warfare","Statecraft, economy, diplomacy and intelligence","Only poetry","Only agriculture"],ans:1,ex:"The Arthashastra covers many dimensions of governance, including economics, diplomacy, law, intelligence and strategy."}
+];
+let n=-1,score=0;
+function renderStart(){app.innerHTML=`<div class="seal">☼</div><h1>The King's Path</h1><div class="tag">An interactive journey inspired by the Arthashastra</div><div class="scene"><p>You are a young royal advisor in ancient India. A kingdom's future depends on what you learn, what you notice, and the decisions you make.</p><div class="quote">Learn the story → make a decision → prove what you remember.</div></div><button class="primary" onclick="begin()">Begin the Journey</button><div class="small">Educational game • Story + decisions + knowledge test</div>`}
+function begin(){n=0;score=0;learn()}
+function learn(){let l=levels[n];app.innerHTML=`<div class="top"><span>Chapter ${n+1}/${levels.length}</span><span>Knowledge ${score}</span></div><div class="bar"><div class="fill" style="width:${n/levels.length*100}%"></div></div><div class="seal">${l.icon}</div><h2>${l.title}</h2><div class="scene"><p>${l.learn}</p><div class="quote">${l.quote}</div></div><button class="primary" onclick="quiz()">Take the King's Test →</button>`}
+function quiz(){let l=levels[n];app.innerHTML=`<div class="top"><span>Knowledge Test</span><span>Score ${score}</span></div><h2>${l.q}</h2>${l.opts.map((x,i)=>`<button onclick="answer(${i})">${String.fromCharCode(65+i)}. ${x}</button>`).join("")}`}
+function answer(x){let l=levels[n],ok=x===l.ans;if(ok)score++;app.innerHTML=`<div class="seal">${ok?"✓":"?"}</div><h2>${ok?"Correct!":"Not quite."}</h2><div class="scene"><div class="choice ${ok?"good":"bad"}"><b>${l.ex}</b></div></div><button class="primary" onclick="${n+1<levels.length?"next()":"finish()"}">${n+1<levels.length?"Continue →":"Reveal My Result →"}</button>`}
+function next(){n++;learn()}
+function finish(){let p=Math.round(score/levels.length*100),rank=p>=90?"ARTHASHASTRA SCHOLAR":p>=70?"ROYAL ADVISOR":p>=50?"STRATEGIST IN TRAINING":"ROYAL APPRENTICE";app.innerHTML=`<div class="result"><div class="seal">👑</div><h1>${rank}</h1><div class="score">${p}%</div><p>You answered <b>${score}</b> of <b>${levels.length}</b> questions correctly.</p><div class="quote">The journey is complete. Replay to master the story.</div><button class="primary" onclick="begin()">Play Again</button><button onclick="renderStart()">Home</button></div>`}
+renderStart();
+</script></body></html>
